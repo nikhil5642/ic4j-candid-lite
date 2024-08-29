@@ -31,21 +31,21 @@ javacc {
             inputFile = file('src/main/java/org/ic4j/candid/parser/idl/value/IDLValueGrammar.jjt')
             outputDir = file('src/main/java')
             packageName = 'org.ic4j.candid.parser.idl.value'
-            
+
             jjtree {
                     nodePackage = 'org.ic4j.candid.parser.idl.value'
                 }
-        } 
+		  }
            type {
             inputFile = file('src/main/java/org/ic4j/candid/parser/idl/type/IDLTypeGrammar.jjt')
             outputDir = file('src/main/java')
             packageName = 'org.ic4j.candid.parser.idl.type'
-            
+
             jjtree {
                     nodePackage = 'org.ic4j.candid.parser.idl.type'
                 }
-        }                          
-    }       
+        }
+    }
 }
 
 tasks.named('javaccType').configure {
@@ -71,19 +71,38 @@ jar {
     }
     
     archiveBaseName = 'ic4j-candid'
+tasks.named('javaccType').configure {
+    dependsOn 'javaccValue'
 }
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes('Implementation-Title': 'ic4j-candid',
-                   'Implementation-Version': project.version)
-    }
-    
-    archiveBaseName = 'ic4j-candid-with-dependencies'
-    
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+tasks.named('jar').configure {
+    excludes = ['org/ic4j/candid/dom/**',
+                'org/ic4j/candid/gson/**',
+                'org/ic4j/candid/jackson/**',
+                'org/ic4j/candid/jaxb/**',
+                'org/ic4j/candid/jdbc/**']
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'ic4j-candid-lite'
+
+            pom.withXml {
+                asNode().dependencies.dependency.findAll {
+                    it.groupId.text() == 'jakarta.xml.bind'
+                }.each { it.parent().remove(it) }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
 
 test {
     useJUnitPlatform()
@@ -91,22 +110,22 @@ test {
 
 dependencies {	
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-	compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'	
+	compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
 	
 	// https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api
-	compileOnly group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'	
-	
+	compileOnly group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'
+
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
 	compileOnly group: 'com.google.code.gson', name: 'gson', version: '2.11.0'	
-	
+
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
-	
+
 	// https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
-	implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78.1'	
+	implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.78.1'
 
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'		
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.2'
 	
 	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.11.0'
@@ -115,29 +134,29 @@ dependencies {
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.11.0'
 	
 	// https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
-	testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.11.0'	
+	testImplementation group: 'org.junit.platform', name: 'junit-platform-launcher', version: '1.11.0'
 	
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
 	testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.16'		
-	
+
 	// https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api
-	testImplementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'	
-	
+	testImplementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '3.0.1'
+
 	// https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
 	testImplementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '3.0.2'
 	
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
 	testImplementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'	
-	
+
 	// https://mvnrepository.com/artifact/commons-codec/commons-codec
 	testImplementation group: 'commons-codec', name: 'commons-codec', version: '1.17.1'
-	
+
 	// https://mvnrepository.com/artifact/org.skyscreamer/jsonassert
-	testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.3'		
+	testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.3'
 	
 	// https://mvnrepository.com/artifact/org.apache.derby/derby
 	testImplementation group: 'org.apache.derby', name: 'derby', version: '10.17.1.0'
 	
-	testImplementation group: 'com.prowidesoftware', name: 'pw-iso20022', version: 'SRU2023-9.4.4'	
+	testImplementation group: 'com.prowidesoftware', name: 'pw-iso20022', version: 'SRU2023-9.4.4'
 }
 
