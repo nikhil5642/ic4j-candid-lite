@@ -55,7 +55,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifactId = 'ic4j-candid'
+            artifactId = 'ic4j-candid-lite'
         }
     }
 
@@ -67,46 +67,27 @@ publishing {
 jar {
     manifest {
         attributes('Implementation-Title': 'ic4j-candid',
-                   'Implementation-Version': project.version)
-    }
-    
-    archiveBaseName = 'ic4j-candid'
-tasks.named('javaccType').configure {
-    dependsOn 'javaccValue'
-}
-
-tasks.named('jar').configure {
-    excludes = ['org/ic4j/candid/dom/**',
-                'org/ic4j/candid/gson/**',
-                'org/ic4j/candid/jackson/**',
-                'org/ic4j/candid/jaxb/**',
-                'org/ic4j/candid/jdbc/**']
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = 'ic4j-candid-lite'
-
-            pom.withXml {
-                asNode().dependencies.dependency.findAll {
-                    it.groupId.text() == 'jakarta.xml.bind'
-                }.each { it.parent().remove(it) }
-            }
-        }
+                'Implementation-Version': project.version)
     }
 
-    repositories {
-        mavenLocal()
+    archiveBaseName = 'ic4j-candid-lite'
+    tasks.named('javaccType').configure {
+        dependsOn 'javaccValue'
+    }
+
+    tasks.named('jar').configure {
+        excludes = ['org/ic4j/candid/dom/**',
+                    'org/ic4j/candid/jackson/**',
+                    'org/ic4j/candid/jaxb/**',
+                    'org/ic4j/candid/jdbc/**']
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
 
 
-test {
-    useJUnitPlatform()
-}
+    test {
+        useJUnitPlatform()
+    }
 
 dependencies {	
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
@@ -159,4 +140,3 @@ dependencies {
 	
 	testImplementation group: 'com.prowidesoftware', name: 'pw-iso20022', version: 'SRU2023-9.4.4'
 }
-
