@@ -76,10 +76,10 @@ jar {
     }
 
     tasks.named('jar').configure {
-//        excludes = ['org/ic4j/candid/dom/**',
-//                    'org/ic4j/candid/jackson/**',
-//                    'org/ic4j/candid/jaxb/**',
-//                    'org/ic4j/candid/jdbc/**']
+        excludes = ['org/ic4j/candid/dom/**',
+                    'org/ic4j/candid/jackson/**',
+                    'org/ic4j/candid/jaxb/**',
+                    'org/ic4j/candid/jdbc/**']
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
