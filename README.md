@@ -8,6 +8,8 @@ This is the lighter version of the [ic4j-agent](https://github.com/ic4j/ic4j-can
  
   For the demonstration purpose, I have built a Tweet's App on top of ICP. This can be found [here](https://github.com/nikhil5642/ICP-TweetApp)
 
+  To start building an Android app on ICP, refer to [this](https://github.com/nikhil5642/ic4j-agent-lite) repo.
+
 ## Supported type mapping between Java and Candid
 
 | Candid      | Java    |
