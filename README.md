@@ -1,5 +1,5 @@
 # dfinity-candid-lite
-This is the lighter version of the [ic4j-agent](https://github.com/ic4j/ic4j-candid)
+This is the lighter version of the [ic4j-candid](https://github.com/ic4j/ic4j-candid)
 
 # Documentation
   From ic4j-candid version [0.7.4](https://repo1.maven.org/maven2/org/ic4j/ic4j-candid/0.7.4/), mobile users can also start building their application on top of ICP using the Java SDK.
